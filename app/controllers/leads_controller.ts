@@ -5,30 +5,44 @@ import { createLeadValidator, updateLeadValidator } from '#validators/lead'
 
 export default class LeadsController {
 
-    async index({ response }: HttpContext) {
+    async index({ inertia }: HttpContext) {
         const leads = await Lead.all()
 
-        return response.ok(leads)
+        return inertia.render('leads/index', { leads })
+    }
+
+    async dashboard_data({ inertia }: HttpContext) {
+        const leads = await Lead.all()
+
+        return inertia.render('dashboard', {
+            leads: leads.map((lead) => lead.serialize()),
+        })
     }
 
     // Get one lead
-    async show({ params, response }: HttpContext) {
-        const lead = await Lead.find(params.id)
+    async show({ params, inertia, response }: HttpContext) {
+        let lead: Lead | null = null
 
-        if (!lead) {
+        if (params.id) {
+            const foundLead = await Lead.find(params.id)
+
+            if (!foundLead) {
             return response.notFound({ message: 'Lead not found' })
+            }
+
+            lead = foundLead.serialize() as Lead
         }
 
-        return response.ok(lead)
+        return inertia.render('leads/form', { lead })
     }
 
     // Create a lead
     async store({ request, response }: HttpContext) {
         const data = await request.validateUsing(createLeadValidator)
 
-        const lead = await Lead.create(data)
+        await Lead.create(data)
 
-        return response.created(lead)
+        return response.redirect('/dashboard/leads')
     }
 
     // Update a lead
@@ -44,7 +58,7 @@ export default class LeadsController {
         lead.merge(data)
         await lead.save()
 
-        return response.ok(lead)
+        return response.redirect('/dashboard/leads')
     }
 
     // Delete a lead
@@ -57,6 +71,6 @@ export default class LeadsController {
 
         await lead.delete()
 
-        return response.noContent()
+        return response.redirect('/dashboard/leads')
     }
 }

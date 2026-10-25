@@ -12,6 +12,7 @@ export type ScannedRoutes = {
     'dashboard': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'leads': { paramsTuple?: []; params?: {} }
+    'leadsform': { paramsTuple?: [ParamValue?]; params?: {'id'?: ParamValue} }
     'leads.index': { paramsTuple?: []; params?: {} }
     'leads.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'leads.store': { paramsTuple?: []; params?: {} }
@@ -24,6 +25,7 @@ export type ScannedRoutes = {
     'session.create': { paramsTuple?: []; params?: {} }
     'dashboard': { paramsTuple?: []; params?: {} }
     'leads': { paramsTuple?: []; params?: {} }
+    'leadsform': { paramsTuple?: [ParamValue?]; params?: {'id'?: ParamValue} }
     'leads.index': { paramsTuple?: []; params?: {} }
     'leads.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
@@ -33,6 +35,7 @@ export type ScannedRoutes = {
     'session.create': { paramsTuple?: []; params?: {} }
     'dashboard': { paramsTuple?: []; params?: {} }
     'leads': { paramsTuple?: []; params?: {} }
+    'leadsform': { paramsTuple?: [ParamValue?]; params?: {'id'?: ParamValue} }
     'leads.index': { paramsTuple?: []; params?: {} }
     'leads.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }

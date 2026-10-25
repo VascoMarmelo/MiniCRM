@@ -111,6 +111,19 @@ export interface Registry {
       rawResponse: ExtractRawResponse<unknown>
     }
   }
+  'leadsform': {
+    methods: ["GET","HEAD"]
+    pattern: '/dashboard/leads/form/:id?'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+      rawResponse: ExtractRawResponse<unknown>
+    }
+  }
   'leads.index': {
     methods: ["GET","HEAD"]
     pattern: '/leads'

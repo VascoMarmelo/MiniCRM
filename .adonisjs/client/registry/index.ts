@@ -54,6 +54,12 @@ const routes = {
     tokens: [[0,"dashboard"],[0,"leads"]],
     types: placeholder as Registry['leads']['types'],
   },
+  'leadsform': {
+    methods: ["GET","HEAD"],
+    pattern: '/dashboard/leads/form/:id?',
+    tokens: [[0,"dashboard"],[0,"leads"],[0,"form"],[3,"id"]],
+    types: placeholder as Registry['leadsform']['types'],
+  },
   'leads.index': {
     methods: ["GET","HEAD"],
     pattern: '/leads',

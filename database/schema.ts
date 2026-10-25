@@ -8,12 +8,20 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class LeadSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'updatedAt'] as const
+  static $columns = ['company', 'createdAt', 'email', 'id', 'name', 'status', 'updatedAt'] as const
   $columns = LeadSchema.$columns
+  @column()
+  declare company: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare email: string
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare status: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

@@ -20,4 +20,5 @@ export interface ApiDefinition {
     update: typeof routes['leads.update']
     destroy: typeof routes['leads.destroy']
   }
+  leadsform: typeof routes['leadsform']
 }

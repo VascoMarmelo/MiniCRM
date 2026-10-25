@@ -1,8 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { LeadSchema } from '#database/schema'
 
-export default class Lead extends LeadSchema {
+export default class Lead extends BaseModel {
     @column({ isPrimary: true })
     declare id: number
 
