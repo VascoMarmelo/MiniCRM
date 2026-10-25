@@ -12,12 +12,13 @@ function Card({
       data-size={size}
       className={cn(
         "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl",
-        "bg-white text-neutral-950 shadow-sm ring-1 ring-neutral-950/10",
-        "dark:bg-[#111114] dark:text-neutral-100 dark:shadow-black/20 dark:ring-white/10",
+        "bg-white text-neutral-950 shadow-sm",
+        "dark:bg-[#111114] dark:text-neutral-100 dark:shadow-black/20 ",
         "[--card-spacing:--spacing(4)]",
         "data-[size=sm]:[--card-spacing:--spacing(3)]",
         "has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0",
         "*:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        "dark:bg-(--ink-3)",
         className
       )}
       {...props}

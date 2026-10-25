@@ -4,6 +4,7 @@ import AppLayout from '~/layouts/app'
 
 import { Head } from '@inertiajs/react'
 import { Users, UserPlus, TrendingUp, Clock } from 'lucide-react'
+import { Card } from '~/components/ui/card'
 
 type Lead = {
   id: number
@@ -52,8 +53,8 @@ export default function Dashboard({leads} : Props) {
 
 
   return (
-    <Page title="Dashboard" hideTitle>
-      <Head title="Leads Dashboard" />
+    <div title="Dashboard" className='flex justify-center grow' hideTitle>
+      <Head title="Dashboard" />
 
       <div className="space-y-8 p-6">
         <div>
@@ -67,25 +68,24 @@ export default function Dashboard({leads} : Props) {
 
         {/* Total leads */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border bg-card p-6 shadow-sm">
+          <Card className="p-6">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-muted-foreground">
                 Total Leads
               </p>
               <Users className="h-5 w-5 text-muted-foreground" />
             </div>
-
-            <p className="mt-3 text-3xl font-bold">{totalLeads}</p>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-0 text-3xl font-bold flex grow">{totalLeads}</p>
+            <p className="mt-0 text-sm text-muted-foreground">
               All leads in your database
             </p>
-          </div>
+          </Card>
 
           {/* One card per status */}
           {Object.entries(leadsByStatus).map(([status, count]) => (
-            <div
+            <Card
               key={status}
-              className="rounded-xl border bg-card p-6 shadow-sm"
+              className="p-6"
             >
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-muted-foreground">
@@ -94,9 +94,9 @@ export default function Dashboard({leads} : Props) {
                 <TrendingUp className="h-5 w-5 text-muted-foreground" />
               </div>
 
-              <p className="mt-3 text-3xl font-bold">{count}</p>
+              <p className="mt-0 text-3xl font-bold">{count}</p>
 
-              <div className="mt-3">
+              <div className="mt-0 flex grow">
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-medium ${
                     statusStyles[status] ?? 'bg-gray-100 text-gray-700'
@@ -107,12 +107,12 @@ export default function Dashboard({leads} : Props) {
                     : '0% of leads'}
                 </span>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
         {/* Recently created leads */}
-        <div className="rounded-xl border bg-card shadow-sm">
+        <Card className="bg-card">
           <div className="flex items-center gap-3 border-b p-6">
             <Clock className="h-5 w-5 text-muted-foreground" />
             <div>
@@ -127,7 +127,7 @@ export default function Dashboard({leads} : Props) {
 
           {recentLeads.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              <UserPlus className="mx-auto mb-3 h-8 w-8" />
+              <UserPlus className="mx-auto my-3 h-8 w-8" />
               <p>No leads yet.</p>
             </div>
           ) : (
@@ -167,9 +167,9 @@ export default function Dashboard({leads} : Props) {
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
-    </Page>
+    </div>
   )
 }
 

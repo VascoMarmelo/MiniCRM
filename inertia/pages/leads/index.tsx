@@ -28,6 +28,16 @@ import {
   AlertDialogTitle,
 } from '~/components/ui/alert-dialog'
 
+import { Input } from '~/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select'
+import { Search, Filter } from 'lucide-react'
+
 type PageProps = {
   flash?: {
     success?: string
@@ -58,9 +68,29 @@ export default function LeadIndex({ leads }: Props) {
     if (flash?.error) toast.error(flash.error)
   }, [flash?.success, flash?.error])
 
+
+  // Search Query
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('All')
+
+  const statuses = [...new Set(leads.map((lead) => lead.status))]
+
+  const filteredLeads = leads.filter((lead) => {
+    const searchTerm = search.toLowerCase().trim()
+
+    const matchesSearch =
+      lead.name.toLowerCase().includes(searchTerm) ||
+      lead.email.toLowerCase().includes(searchTerm)
+
+    const matchesStatus =
+      statusFilter === 'All' || lead.status === statusFilter
+
+    return matchesSearch && matchesStatus
+  })
+
   return (
     <Page title="Leads" hideTitle>
-      <div className="grow space-y-8 rounded-2xl border border-neutral-200 bg-(--card) p-6 md:p-10 dark:border-white/10 dark:bg-[#111114]">
+      <div className="grow space-y-8 rounded-2xl p-6 md:p-10 dark:bg-[#111114]">
         {/* Header */}
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -70,10 +100,10 @@ export default function LeadIndex({ leads }: Props) {
             </p>
           </div>
 
-          <Button asChild variant="outline" size="sm">
-            <Link href="/dashboard/leads/form">
+          <Button asChild variant="outline" className="dark:border-[var(--ink-3)]" size="sm">
+            <Link href="/dashboard/leads/form" className='flex items-center'>
               <Plus className="mr-1 h-4 w-4" />
-              Add Lead
+              Create new Lead
             </Link>
           </Button>
         </div>
@@ -94,26 +124,66 @@ export default function LeadIndex({ leads }: Props) {
           </Card>
         </div>
 
+
+        {/* Search and filters */}
+        <Card className="flex flex-col gap-3 sm:flex-row sm:items-center p-2 rounded-2xl ">
+          <div className="relative flex-1 text-white">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground dark:text-white" />
+            <Input
+              placeholder="Search by name or email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 dark:border-[var(--ink-3)] dark:text-muted"
+            />
+          </div>
+        
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => setStatusFilter(value ?? 'All')}
+          >
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <Filter className="mr-2 h-4 w-4 text-muted-foreground dark:text-white" />
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="All">All Statuses</SelectItem>
+
+              {statuses.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Card>
+
+
         {/* Lead cards */}
-        {leads.length === 0 ? (
+        {filteredLeads.length === 0 ? (
           <Card className="rounded-xl shadow-sm">
             <CardContent className="flex flex-col items-center justify-center p-10 text-center">
               <Users className="mb-3 h-10 w-10 text-muted-foreground" />
-              <h3 className="text-lg font-semibold">No leads yet</h3>
+              <h3 className="text-lg font-semibold">
+                {leads.length === 0 ? 'No leads yet' : 'No matching leads'}
+              </h3>
+
               <p className="mt-1 text-sm text-muted-foreground">
-                Create your first lead to get started.
+                {leads.length === 0
+                  ? 'Create your first lead to get started.'
+                  : 'Try changing your search or status filter.'}
               </p>
-              <Button asChild className="mt-4">
-                <Link href="/dashboard/leads/form">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Lead
+              <Button asChild variant="outline" size="sm" className="mt-5">
+                <Link href="/dashboard/leads/form" className='flex items-center'>
+                  <Plus className="mr-1 h-4 w-4" />
+                  Create new Lead
                 </Link>
               </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {leads.map((lead) => (
+            {filteredLeads.map((lead) => (
               <Card
                 key={lead.id}
                 className="rounded-xl shadow-sm transition-colors hover:border-neutral-400 dark:hover:border-white/20"
@@ -138,10 +208,10 @@ export default function LeadIndex({ leads }: Props) {
                           </Button>
                         }
                       />
-                      <DropdownMenuContent align="end" className="w-36">
+                      <DropdownMenuContent align="end" className="w-36" className="dark:bg-[var(--ink-3)] dark:text-white  ">
                         <DropdownMenuGroup>
-                          <DropdownMenuItem asChild>
-                            <Link href={`/dashboard/leads/form/${lead.id}`}>
+                          <DropdownMenuItem asChild className="hover:bg-[var(--ink-2)]">
+                            <Link href={`/dashboard/leads/form/${lead.id}`} className='flex justify-between grow '>
                               Edit
                               <DropdownMenuShortcut>
                                 <Pencil className="h-4 w-4" />
@@ -150,7 +220,7 @@ export default function LeadIndex({ leads }: Props) {
                           </DropdownMenuItem>
 
                           <DropdownMenuItem
-                            variant="destructive"
+                            className="hover:!bg-red-500 hover:cursor-pointer"
                             onClick={() => {
                               setSelectedLead(lead.id)
                               setPromptDelete(true)
@@ -204,7 +274,7 @@ export default function LeadIndex({ leads }: Props) {
           if (!open) setSelectedLead(null)
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-(--ink-3) dark:text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete lead?</AlertDialogTitle>
             <AlertDialogDescription>

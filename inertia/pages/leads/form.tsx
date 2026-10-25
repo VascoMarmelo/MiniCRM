@@ -76,104 +76,107 @@ export default function LeadForm({ lead }: Props) {
   }
 
   return (
-    <Page title="Leads Form" hideTitle>
-      <div className="bg-(--card) grow p-10 rounded-2xl border-neutral-200 dark:border-white/10 dark:bg-[#111114]">
-        <CardHeader className='mb-5'>
-          <CardTitle className="text-xl">Create lead</CardTitle>
-          <CardDescription>
-            Add a new lead to your sales pipeline.
-          </CardDescription>
-        </CardHeader>
+    <Page>
+      <Card title="Leads Form" className="flex w-full" hideTitle>
+        <div className="bg-(--card) p-10 rounded-2xl border-neutral-200 dark:border-white/10 dark:bg-[#111114]">
+          <CardHeader className='mb-5'>
+            <CardTitle className="text-xl">Create lead</CardTitle>
+            <CardDescription>
+              Add a new lead to your sales pipeline.
+            </CardDescription>
+          </CardHeader>
 
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-6">
-            <div className="">
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-6">
+              <div className="">
+                <div className="space-y-2 ">
+                  <Label htmlFor="name">Full Name *</Label>
+                  <Input
+                    id="name"
+                    value={data.name}
+                    onChange={(e) => setData('name', e.target.value)}
+                    aria-invalid={!!errors.name}
+                    placeholder="Jane"
+                    required
+                  />
+                  {errors.name && (
+                    <p className="text-sm text-red-600">{errors.name}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={data.email}
+                    onChange={(e) => setData('email', e.target.value)}
+                    aria-invalid={!!errors.email}
+                    placeholder="jane@company.com"
+                    required
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-600">{errors.email}</p>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name *</Label>
+                <Label htmlFor="company">Company</Label>
                 <Input
-                  id="name"
-                  value={data.name}
-                  onChange={(e) => setData('name', e.target.value)}
-                  aria-invalid={!!errors.name}
-                  placeholder="Jane"
-                  required
+                  id="company"
+                  value={data.company}
+                  onChange={(e) => setData('company', e.target.value)}
+                  placeholder="Acme Inc."
                 />
-                {errors.name && (
-                  <p className="text-sm text-red-600">{errors.name}</p>
+                {errors.company && (
+                  <p className="text-sm text-red-600">{errors.company}</p>
                 )}
               </div>
-            </div>
 
-            <div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={data.email}
-                  onChange={(e) => setData('email', e.target.value)}
-                  aria-invalid={!!errors.email}
-                  placeholder="jane@company.com"
-                  required
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-600">{errors.email}</p>
-                )}
+              <div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select
+                    value={data.status}
+                    onValueChange={(value) => setData('status', value)}
+                  >
+                    <SelectTrigger id="status">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="New">New</SelectItem>
+                      <SelectItem value="Contacted">Contacted</SelectItem>
+                      <SelectItem value="Qualified">Qualified</SelectItem>
+                      <SelectItem value="Lost">Lost</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.status && (
+                    <p className="text-sm text-red-600">{errors.status}</p>
+                  )}
+                </div>
               </div>
-            </div>
+            </CardContent>
 
-            <div className="space-y-2">
-              <Label htmlFor="company">Company</Label>
-              <Input
-                id="company"
-                value={data.company}
-                onChange={(e) => setData('company', e.target.value)}
-                placeholder="Acme Inc."
-              />
-              {errors.company && (
-                <p className="text-sm text-red-600">{errors.company}</p>
-              )}
+            <div className="justify-end gap-3 flex pt-5">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => window.history.back()}
+                disabled={processing}
+                className="dark:border-(--ink-3)"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={processing} className="dark:bg-(--ink-3)">
+                {processing ? 'Creating...' : 'Create lead'}
+              </Button>
             </div>
-
-            <div>
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={data.status}
-                  onValueChange={(value) => setData('status', value)}
-                >
-                  <SelectTrigger id="status">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="New">New</SelectItem>
-                    <SelectItem value="Contacted">Contacted</SelectItem>
-                    <SelectItem value="Qualified">Qualified</SelectItem>
-                    <SelectItem value="Lost">Lost</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.status && (
-                  <p className="text-sm text-red-600">{errors.status}</p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-
-          <div className="justify-end gap-3 flex pt-5">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => window.history.back()}
-              disabled={processing}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={processing}>
-              {processing ? 'Creating...' : 'Create lead'}
-            </Button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </Card>
     </Page>
   )
 }

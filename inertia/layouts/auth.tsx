@@ -19,22 +19,21 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </div>
 
           <p className="auth__quote">
-            Auth, kept intentionally minimal so you can build it your way.
+            MiniCRM Auth, kept intentionally minimal ...
           </p>
 
           <div>
-            <div className="pitch__t">Looking for production-ready auth?</div>
+            <div className="pitch__t">Looking for new Leads?</div>
             <p className="pitch__p">
-              Check out Feature packs, production-ready full-stack components from the creator of
-              AdonisJS.
+              Check out Lead Discovery app, from out suite of apps!
             </p>
             <a
               className="il pitch__a"
-              href="https://plus.adonisjs.com/feature-packs"
+              href="#"
               target="_blank"
               rel="noreferrer"
             >
-              Explore Feature packs →
+              Explore Suite →
             </a>
           </div>
         </aside>
