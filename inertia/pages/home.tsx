@@ -32,7 +32,7 @@ const stats = [
 function Home() {
   return (
     <>
-      <Head title="MiniCRM — Simple lead management" />
+      <Head title="Simple lead management" />
 
       <main className="min-h-screen bg-[var(--paper)] text-[var(--ink)]">
         {/* Hero */}

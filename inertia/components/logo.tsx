@@ -5,7 +5,7 @@ export default function Logo({ size = 26 }: { size?: number }) {
   return (
     <Link
       route="home"
-      aria-label="AdonisJS"
+      aria-label="Logo"
       style={{ display: 'inline-flex', color: 'var(--ink)' }}
     >
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--btn)] text-[var(--btn-fg)]">

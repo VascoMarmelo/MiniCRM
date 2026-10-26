@@ -113,7 +113,7 @@ export default function LeadForm({ lead }: Props) {
 
 
   return (
-    <Page title="">
+    <Page title="Lead Form">
       <Card className="flex w-full" hideTitle>
         {(isLoading) && (
             <div className="absolute inset-0 z-50 flex items-center justify-center rounded-xl bg-background/70 backdrop-blur-[2px]">
