@@ -35,7 +35,7 @@ NodeJS v24.22.1 >
 
 For fedora 44, install make and is dependecies: `sudo dnf install make gcc-c++ python3`
 
-##### Guide
+##### Guide to deploy
 
 After installing NodeJS, go to project dir and do `npm install`
 ```cmd
@@ -48,7 +48,7 @@ Now, create a env file based on .env.example and edit the file at your liking.
 cp .env.example .env
 ```
 
-Open the file, and edit for your needs
+Open the file, and edit for your needs (By default is in production)
 
 Example
 ```
@@ -73,7 +73,7 @@ SESSION_DRIVER=cookie
 
 After that, use the command `node ace generate:key` to generate the APP_KEY on .env file
 
-To create the tables for the database, use `node ace migration:run`, so that the app works correctly. 
+To create the database and his tables, use `node ace migration:run` to run migration first, so that the app works correctly. 
 
 Finally, run the next commands to build and run the app:
 
