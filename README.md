@@ -31,7 +31,7 @@ The leads have the structure:
 Can only provide a 100% tutorial on Fedora 44. Other option should works the same way, but is could need extra steps 
 
 ##### Requirements
-NodeJS v24.22.1 >
+NodeJS v24.22.1 or higher
 
 For fedora 44, install make and is dependecies: `sudo dnf install make gcc-c++ python3`
 
