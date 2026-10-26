@@ -1,6 +1,6 @@
 # MiniCRM
 
-A Small CRM application that helps a business manage its leads. It uses AdonisJS for backend, with React and Tailwind on the frontend.
+A Small CRM application that helps a business manage its leads. It uses AdonisJS for backend, with React and Tailwind on the frontend, with SQLite as the database.
 
 <img width="1905" height="965" alt="image" src="https://github.com/user-attachments/assets/29f2370e-4587-410e-8326-e3a6a0c5ee10" />
 
