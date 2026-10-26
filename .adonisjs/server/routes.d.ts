@@ -51,6 +51,10 @@ export type ScannedRoutes = {
   DELETE: {
     'leads.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
+  OPTIONS: {
+  }
+  PATCH: {
+  }
 }
 declare module '@adonisjs/core/types/http' {
   export interface RoutesList extends ScannedRoutes {}

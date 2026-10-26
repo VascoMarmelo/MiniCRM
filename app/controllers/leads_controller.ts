@@ -6,6 +6,7 @@ import { createLeadValidator, updateLeadValidator } from '#validators/lead'
 export default class LeadsController {
 
     async index({ inertia }: HttpContext) {
+
         const leads = await Lead.all()
 
         return inertia.render('leads/index', { leads })
@@ -27,7 +28,7 @@ export default class LeadsController {
             const foundLead = await Lead.find(params.id)
 
             if (!foundLead) {
-            return response.notFound({ message: 'Lead not found' })
+                return response.notFound({ message: 'Lead not found' })
             }
 
             lead = foundLead.serialize() as Lead
@@ -68,6 +69,9 @@ export default class LeadsController {
         if (!lead) {
             return response.notFound({ message: 'Lead not found' })
         }
+
+        // Temporary delay for testing the deletion loading spinner
+        //await new Promise((resolve) => setTimeout(resolve, 3000))
 
         await lead.delete()
 

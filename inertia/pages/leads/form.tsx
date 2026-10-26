@@ -22,6 +22,10 @@ import AppLayout from '~/layouts/app'
 
 import { toast } from 'sonner'
 import Lead from '#models/lead'
+import { useEffect, useState } from 'react'
+import { Loader2 } from 'lucide-react'
+
+import { TEST_LOADING } from '~/testing_config/testing'
 
 type LeadFormData = {
   name: string
@@ -75,9 +79,45 @@ export default function LeadForm({ lead }: Props) {
     }
   }
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [pageError, setPageError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const removeStart = router.on('start', () => {
+      setIsLoading(true)
+    })
+
+    const removeFinish = router.on('finish', () => {
+      setIsLoading(false)
+    })
+
+    return () => {
+      removeStart()
+      removeFinish()
+    }
+  }, [])
+
+  function testLoading() {
+    setIsLoading(true)
+
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+  }
+
+
+
   return (
-    <Page>
-      <Card title="Leads Form" className="flex w-full" hideTitle>
+    <Page title="">
+      <Card className="flex w-full" hideTitle>
+         {(isLoading) && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-xl bg-background/70 backdrop-blur-[2px]">
+              <div className="flex flex-col items-center gap-3">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <p className="text-sm text-muted-foreground">Loading lead...</p>
+              </div>
+            </div>
+          )}
         <div className="bg-(--card) p-10 rounded-2xl border-neutral-200 dark:border-white/10 dark:bg-[#111114]">
           <CardHeader className='mb-5'>
             <CardTitle className="text-xl">Create lead</CardTitle>
@@ -97,6 +137,7 @@ export default function LeadForm({ lead }: Props) {
                     onChange={(e) => setData('name', e.target.value)}
                     aria-invalid={!!errors.name}
                     placeholder="Jane"
+                    maxLength={50}
                     required
                   />
                   {errors.name && (
@@ -115,6 +156,7 @@ export default function LeadForm({ lead }: Props) {
                     onChange={(e) => setData('email', e.target.value)}
                     aria-invalid={!!errors.email}
                     placeholder="jane@company.com"
+                    maxLength={50}
                     required
                   />
                   {errors.email && (
@@ -124,12 +166,14 @@ export default function LeadForm({ lead }: Props) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
+                <Label htmlFor="company">Company *</Label>
                 <Input
                   id="company"
                   value={data.company}
                   onChange={(e) => setData('company', e.target.value)}
                   placeholder="Acme Inc."
+                  maxLength={50}
+                  required
                 />
                 {errors.company && (
                   <p className="text-sm text-red-600">{errors.company}</p>
@@ -138,7 +182,7 @@ export default function LeadForm({ lead }: Props) {
 
               <div>
                 <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
+                  <Label htmlFor="status">Status *</Label>
                   <Select
                     value={data.status}
                     onValueChange={(value) => setData('status', value)}
@@ -177,6 +221,16 @@ export default function LeadForm({ lead }: Props) {
           </form>
         </div>
       </Card>
+      {TEST_LOADING && (
+        <Button
+          type="button"
+          className="mt-10"
+          variant="outline"
+          onClick={testLoading}
+        >
+          Test loading overlay
+        </Button>
+      )}
     </Page>
   )
 }

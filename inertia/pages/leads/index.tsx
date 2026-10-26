@@ -4,7 +4,7 @@ import { Card, CardContent } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
 import { Label } from '~/components/ui/label'
 import { Link, router, usePage } from '@inertiajs/react'
-import { Plus, Menu, Pencil, Trash, Users } from 'lucide-react'
+import { Plus, Menu, Pencil, Trash, Users, Loader2, AlertCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -37,6 +37,19 @@ import {
   SelectValue,
 } from '~/components/ui/select'
 import { Search, Filter } from 'lucide-react'
+import { LeadsCardEmpty, LeadsLoading } from '~/components/custom_ui/leadCard'
+
+
+import { TEST_LOADING, TEST_ERROR } from '~/testing_config/testing'
+
+
+const statusStyles: Record<string, string> = {
+  New: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
+  Contacted: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400',
+  Qualified: 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400',
+  Converted: 'bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400',
+  Lost: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
+}
 
 type PageProps = {
   flash?: {
@@ -49,19 +62,12 @@ type Props = {
   leads: Lead[]
 }
 
-const statusStyles: Record<string, string> = {
-  New: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
-  Contacted: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400',
-  Qualified: 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400',
-  Converted: 'bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400',
-  Lost: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
-}
+
 
 export default function LeadIndex({ leads }: Props) {
-  const { flash } = usePage<PageProps>().props
 
-  const [promptDelete, setPromptDelete] = useState(false)
-  const [selectedLead, setSelectedLead] = useState<number | null>(null)
+  // Pop up message
+  const { flash } = usePage<PageProps>().props
 
   useEffect(() => {
     if (flash?.success) toast.success(flash.success)
@@ -69,12 +75,19 @@ export default function LeadIndex({ leads }: Props) {
   }, [flash?.success, flash?.error])
 
 
+  // Prompt for lead deletion
+  const [promptDelete, setPromptDelete] = useState(false)
+  const [selectedLead, setSelectedLead] = useState<number | null>(null)
+
   // Search Query
+  //// Search Filter
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
-
+    
+  //// Status list
   const statuses = [...new Set(leads.map((lead) => lead.status))]
 
+  //// Filter function
   const filteredLeads = leads.filter((lead) => {
     const searchTerm = search.toLowerCase().trim()
 
@@ -88,9 +101,36 @@ export default function LeadIndex({ leads }: Props) {
     return matchesSearch && matchesStatus
   })
 
+
+  // Loading State
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [pageError, setPageError] = useState<string | null>(null)
+
+  // Track Inertia page visits
+  useEffect(() => {
+    const removeStart = router.on('start', () => {
+      setIsLoading(true)
+      setPageError(null)
+    })
+
+    const removeFinish = router.on('finish', (event) => {
+      setIsLoading(false)
+
+      if (event.detail.visit.completed === false) {
+        setPageError('Unable to load the page. Please try again.')
+      }
+    })
+
+    return () => {
+      removeStart()
+      removeFinish()
+    }
+  }, [])
+
   return (
     <Page title="Leads" hideTitle>
-      <div className="grow space-y-8 rounded-2xl p-6 md:p-10 dark:bg-[#111114]">
+      <div className="grow space-y-8 rounded-2xl p-6 md:p-10">
         {/* Header */}
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -100,7 +140,7 @@ export default function LeadIndex({ leads }: Props) {
             </p>
           </div>
 
-          <Button asChild variant="outline" className="dark:border-[var(--ink-3)]" size="sm">
+          <Button asChild variant="outline" className="dark:border-(--ink-3)" size="sm">
             <Link href="/dashboard/leads/form" className='flex items-center'>
               <Plus className="mr-1 h-4 w-4" />
               Create new Lead
@@ -127,13 +167,13 @@ export default function LeadIndex({ leads }: Props) {
 
         {/* Search and filters */}
         <Card className="flex flex-col gap-3 sm:flex-row sm:items-center p-2 rounded-2xl ">
-          <div className="relative flex-1 text-white">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground dark:text-white" />
             <Input
               placeholder="Search by name or email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 dark:border-[var(--ink-3)] dark:text-muted"
+              className="pl-9"
             />
           </div>
         
@@ -160,28 +200,37 @@ export default function LeadIndex({ leads }: Props) {
 
 
         {/* Lead cards */}
-        {filteredLeads.length === 0 ? (
-          <Card className="rounded-xl shadow-sm">
-            <CardContent className="flex flex-col items-center justify-center p-10 text-center">
-              <Users className="mb-3 h-10 w-10 text-muted-foreground" />
-              <h3 className="text-lg font-semibold">
-                {leads.length === 0 ? 'No leads yet' : 'No matching leads'}
-              </h3>
+          {TEST_LOADING || isLoading ? (
+            // Loading State
+            <LeadsLoading />
+          ) : TEST_ERROR || pageError ? (
+            // Error State
+            <Card className="rounded-xl shadow-sm">
+              <CardContent className="flex flex-col items-center p-10 text-center">
+                <AlertCircle className="mb-3 h-10 w-10 text-destructive" />
 
-              <p className="mt-1 text-sm text-muted-foreground">
-                {leads.length === 0
-                  ? 'Create your first lead to get started.'
-                  : 'Try changing your search or status filter.'}
-              </p>
-              <Button asChild variant="outline" size="sm" className="mt-5">
-                <Link href="/dashboard/leads/form" className='flex items-center'>
-                  <Plus className="mr-1 h-4 w-4" />
-                  Create new Lead
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
+                <h3 className="text-lg font-semibold">
+                  Something went wrong
+                </h3>
+
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {pageError}
+                </p>
+
+                <Button
+                  variant="outline"
+                  className="mt-5"
+                  onClick={() => router.reload()}
+                >
+                  Try again
+                </Button>
+              </CardContent>
+            </Card>
+          ) : filteredLeads.length === 0 ? (
+            /* Empty state */
+            <LeadsCardEmpty empty={leads.length === 0} />
+            
+          ) : (
           <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filteredLeads.map((lead) => (
               <Card
@@ -274,7 +323,7 @@ export default function LeadIndex({ leads }: Props) {
           if (!open) setSelectedLead(null)
         }}
       >
-        <AlertDialogContent className="dark:bg-(--ink-3) dark:text-white">
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete lead?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -283,28 +332,37 @@ export default function LeadIndex({ leads }: Props) {
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>   
+              <AlertDialogAction
+                disabled={isDeleting || selectedLead === null}
+                className="bg-red-600 text-white hover:bg-red-700"
+                onClick={() => {
+                  if (selectedLead === null || isDeleting) return
 
-            <AlertDialogAction
-              className="bg-red-600 text-white hover:bg-red-700"
-              onClick={() => {
-                if (selectedLead === null) return
+                  setIsDeleting(true)
 
-                router.delete(`/leads/${selectedLead}`, {
-                  preserveScroll: true,
-                  onSuccess: () => {
-                    setPromptDelete(false)
-                    setSelectedLead(null)
-                    toast.success('Lead deleted successfully!')
-                  },
-                  onError: () => {
-                    toast.error('Failed to delete lead.')
-                  },
-                })
-              }}
-            >
-              Delete
-            </AlertDialogAction>
+                  router.delete(`/leads/${selectedLead}`, {
+                    preserveScroll: true,
+
+                    onSuccess: () => {
+                      setPromptDelete(false)
+                      setSelectedLead(null)
+                      toast.success('Lead deleted successfully!')
+                    },
+
+                    onError: () => {
+                      toast.error('Failed to delete lead.')
+                    },
+
+                    onFinish: () => {
+                      setIsDeleting(false)
+                    },
+                  })
+                }}
+              >
+                {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

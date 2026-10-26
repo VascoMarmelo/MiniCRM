@@ -40,3 +40,7 @@ router
     router.delete('/leads/:id', [LeadsController, 'destroy'])
   })
   .use(middleware.auth())
+
+router.any('*', async ({ response }) => {
+  return response.redirect('/')
+})
