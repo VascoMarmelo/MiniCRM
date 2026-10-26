@@ -31,28 +31,61 @@ The leads have the structure:
 Can only provide a 100% tutorial on Fedora 44. Other option should works the same way, but is could need extra steps 
 
 ##### Requirements
-NodeJS v24.0.0 >
+NodeJS v24.22.1 >
 
 For fedora 44, install make and is dependecies: `sudo dnf install make gcc-c++ python3`
 
 ##### Guide
 
 After installing NodeJS, go to project dir and do `npm install`
-```terminal
+```cmd
 cd MiniCRM
 npm install
 ```
 Now, create a env file based on .env.example and edit the file at your liking.
 
-```terminal
+```cmd
 cp .env.example .env
 ```
+
+Open the file, and edit for your needs
+
+Example
+```
+# Node
+TZ=UTC
+PORT=3333
+HOST=localhost
+NODE_ENV=production
+
+# App
+LOG_LEVEL=info
+APP_KEY=
+APP_URL=http://localhost:3333
+
+# DB
+DB_CONNECTION=sqlite
+DB_DATABASE=tmp/db.sqlite3
+
+# Session
+SESSION_DRIVER=cookie
+```
+
 After that, use the command `node ace generate:key` to generate the APP_KEY on .env file
 
 To create the tables for the database, use `node ace migration:run`, so that the app works correctly. 
 
+Finally, run the next commands to build and run the app:
+
+```cmd
+npm run build
+npm run start
+```
+
+
 # Disclaimer
 
 Part of the code for interface was created with help of AI, but corrected and review by me.
+All the data on the images are generated using a fabric and seeder provided by adonisjs framework
 
 
