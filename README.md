@@ -33,7 +33,7 @@ Can only provide a 100% tutorial on Fedora 44. Other option should works the sam
 ##### Requirements
 NodeJS v24.22.1 or higher
 
-For fedora 44, install make and is dependecies: `sudo dnf install make gcc-c++ python3`
+For Fedora 44, install `make` and is dependecies: `sudo dnf install make gcc-c++ python3`
 
 ##### Guide to deploy
 
