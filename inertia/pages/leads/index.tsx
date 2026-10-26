@@ -39,10 +39,9 @@ import {
 import { Search, Filter } from 'lucide-react'
 import { LeadsCardEmpty, LeadsLoading } from '~/components/custom_ui/leadCard'
 
-
 import { TEST_LOADING, TEST_ERROR } from '~/testing_config/testing'
 
-
+// Const
 const statusStyles: Record<string, string> = {
   New: 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
   Contacted: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400',
@@ -51,6 +50,7 @@ const statusStyles: Record<string, string> = {
   Lost: 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
 }
 
+//Types
 type PageProps = {
   flash?: {
     success?: string
@@ -61,8 +61,6 @@ type PageProps = {
 type Props = {
   leads: Lead[]
 }
-
-
 
 export default function LeadIndex({ leads }: Props) {
 
@@ -107,7 +105,7 @@ export default function LeadIndex({ leads }: Props) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [pageError, setPageError] = useState<string | null>(null)
 
-  // Track Inertia page visits
+  // Track Inertia page visits, with a loading, or error
   useEffect(() => {
     const removeStart = router.on('start', () => {
       setIsLoading(true)
@@ -140,7 +138,7 @@ export default function LeadIndex({ leads }: Props) {
             </p>
           </div>
 
-          <Button asChild variant="outline" className="dark:border-(--ink-3)" size="sm">
+          <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/leads/form" className='flex items-center'>
               <Plus className="mr-1 h-4 w-4" />
               Create new Lead
@@ -219,7 +217,7 @@ export default function LeadIndex({ leads }: Props) {
 
                 <Button
                   variant="outline"
-                  className="mt-5"
+                  className="mt-5 dark:border-(--ink-3)"
                   onClick={() => router.reload()}
                 >
                   Try again

@@ -27,6 +27,7 @@ import { Loader2 } from 'lucide-react'
 
 import { TEST_LOADING } from '~/testing_config/testing'
 
+//Types
 type LeadFormData = {
   name: string
   email: string
@@ -40,8 +41,7 @@ type Props = {
 
 export default function LeadForm({ lead }: Props) {
 
-  console.log(lead)
-
+  // Form structure
   const { data, setData, post, put, processing, errors } = useForm<LeadFormData>({
     name: lead ? lead.name : '',
     email: lead ? lead.email : '',
@@ -49,6 +49,7 @@ export default function LeadForm({ lead }: Props) {
     status: lead ? lead.status : 'New'
   })
 
+  // Form submission
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
@@ -79,10 +80,13 @@ export default function LeadForm({ lead }: Props) {
     }
   }
 
+ 
+
+  // Loading screen, with timeout error component
   const [isLoading, setIsLoading] = useState(false)
-  const [pageError, setPageError] = useState<string | null>(null)
 
   useEffect(() => {
+
     const removeStart = router.on('start', () => {
       setIsLoading(true)
     })
@@ -97,6 +101,7 @@ export default function LeadForm({ lead }: Props) {
     }
   }, [])
 
+  // Testing functions
   function testLoading() {
     setIsLoading(true)
 
@@ -110,7 +115,7 @@ export default function LeadForm({ lead }: Props) {
   return (
     <Page title="">
       <Card className="flex w-full" hideTitle>
-         {(isLoading) && (
+        {(isLoading) && (
             <div className="absolute inset-0 z-50 flex items-center justify-center rounded-xl bg-background/70 backdrop-blur-[2px]">
               <div className="flex flex-col items-center gap-3">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -219,7 +224,7 @@ export default function LeadForm({ lead }: Props) {
               </Button>
             </div>
           </form>
-        </div>
+        </div>      
       </Card>
       {TEST_LOADING && (
         <Button
