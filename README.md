@@ -1,16 +1,16 @@
 # MiniCRM
 
-A Small CRM application that helps a business manage its leads. It uses AdonisJS for backend, with React and Tailwind on the frontend, with SQLite as the database.
+A **Small CRM application** that helps a business manage its leads. It uses AdonisJS for backend, with React and Tailwind on the frontend, with SQLite as the database.
 
 <img width="1905" height="965" alt="image" src="https://github.com/user-attachments/assets/29f2370e-4587-410e-8326-e3a6a0c5ee10" />
 
 
 ### 1. What provides
 
-The app provides a built in authentication, with dashboard for CRUD operation on leads.
-The dashboard presents a count of total number of leads, number of leads by status and a list of recently created leads.
+The app provides a **built in authentication**, with **dashboard** with **CRUD operation on leads**.
+The dashboard shows a count of **total number of leads**, **number of leads by status** and a **list of recently created leads**.
 
-The interface is already prepared for light and dark mode and smartphones screens, with the option to customize with custom colors, on the main css (inertia/css/app.css), with a option of using TailwindCSS.
+The interface is already prepared for **light** and **dark** mode and **smartphones screens**, with the **option** to **customize** with custom colors, on the main css (inertia/css/app.css), or using TailwindCSS.
 
 <img width="1905" height="965" alt="image" src="https://github.com/user-attachments/assets/5dd1fbc4-17d7-4f2f-8b00-054080c2f758" />
 
