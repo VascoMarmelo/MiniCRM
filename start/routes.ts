@@ -11,7 +11,6 @@ import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 import LeadsController from '#controllers/leads_controller'
-import Lead from '#models/lead'
 
 router.on('/').renderInertia('home', {}).as('home')
 

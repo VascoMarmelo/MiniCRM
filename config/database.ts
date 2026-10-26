@@ -1,4 +1,4 @@
-import app from '@adonisjs/core/services/app'
+import env from '#start/env'
 import { defineConfig } from '@adonisjs/lucid'
 
 const dbConfig = defineConfig({
@@ -18,7 +18,7 @@ const dbConfig = defineConfig({
         /**
          * Database file location.
          */
-        filename: app.tmpPath('db.sqlite3'),
+        filename: env.get('DB_DATABASE'),
       },
 
       /**
